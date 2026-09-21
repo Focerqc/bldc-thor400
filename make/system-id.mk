@@ -6,15 +6,24 @@
 OSFLAG :=
 
 ifeq ($(OS),Windows_NT)
-  OSFLAG += -D WIN32
-  OSFAMILY := windows
-  WINDOWS := 1
-
-  ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-    OSFLAG += -D AMD64
-  endif
-  ifeq ($(PROCESSOR_ARCHITECTURE),x86)
-    OSFLAG += -D IA32
+  # Check if we're actually running inside an MSYS2/Cygwin shell
+  # If uname is available, defer to it (treat as Linux build environment)
+  UNAME_CHECK := $(shell uname -s 2>/dev/null)
+  ifneq ($(UNAME_CHECK),)
+    # Running inside MSYS2/Cygwin subshell — treat as Linux
+    OSFLAG += -D LINUX
+    OSFAMILY := linux
+    LINUX := 1
+  else
+    OSFLAG += -D WIN32
+    OSFAMILY := windows
+    WINDOWS := 1
+    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+      OSFLAG += -D AMD64
+    endif
+    ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+      OSFLAG += -D IA32
+    endif
   endif
 else
   UNAME_S := $(shell uname -s)

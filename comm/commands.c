@@ -53,7 +53,11 @@
 #include "crc.h"
 #ifdef USE_LISPBM
 #include "lispif.h"
+#else
+// Forward declaration needed by commands_printf_lisp even without full LispBM
+char* lispif_print_prefix(void);
 #endif
+
 #include "main.h"
 #include "conf_custom.h"
 #include "comm_usb.h"
