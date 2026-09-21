@@ -18,6 +18,11 @@ ifeq ($(OS),Windows_NT)
   endif
 else
   UNAME_S := $(shell uname -s)
+  ifneq ($(filter MSYS% MINGW%,$(UNAME_S)),)
+    OSFLAG += -D LINUX
+    OSFAMILY := linux
+    LINUX := 1
+  endif
   ifeq ($(UNAME_S),Linux)
     OSFLAG += -D LINUX
     OSFAMILY := linux
